@@ -1,0 +1,1 @@
+# trakt-mcp-server
