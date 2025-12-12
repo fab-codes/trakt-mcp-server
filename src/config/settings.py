@@ -7,6 +7,7 @@ load_dotenv()
 class AppConfig:
     TRAKT_CLIENT_ID = os.getenv("TRAKT_CLIENT_ID")
     TRAKT_CLIENT_SECRET = os.getenv("TRAKT_CLIENT_SECRET")
+    TRAKT_API_VERSION = os.getenv("TRAKT_API_VERSION")
     PROJECT_ROOT = Path(__file__).parent.parent
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
@@ -16,6 +17,8 @@ def validate_config():
         missing.append("TRAKT_CLIENT_ID")
     if not AppConfig.TRAKT_CLIENT_SECRET:
         missing.append("TRAKT_CLIENT_SECRET")
+    if not AppConfig.TRAKT_API_VERSION:
+        missing.append("TRAKT_API_VERSION")
     
     if missing:
         raise ValueError(f"Missing environment variables: {missing}")
