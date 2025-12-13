@@ -1,6 +1,6 @@
 import logging
 import sys
-from src.config.settings import AppConfig
+from src.config import AppConfig
 
 def setup_logging():
     """Setup logging configuration"""
@@ -18,7 +18,7 @@ def setup_logging():
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
             logging.FileHandler(log_dir / "app.log", encoding='utf-8'),
-            logging.StreamHandler(sys.stdout)
+            logging.StreamHandler(sys.stderr)
         ]
     )
     
