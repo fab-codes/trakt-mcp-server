@@ -1,6 +1,6 @@
 # Trakt MCP Server
 
-A Model Context Protocol (MCP) server that provides AI assistants with access to the Trakt.tv API, enabling TV show tracking, watchlist management, and viewing history queries.
+A Model Context Protocol (MCP) server that provides AI assistants with access to the [Trakt.tv](https://trakt.tv) API, enabling TV show tracking, watchlist management, and viewing history queries.
 
 ## Features
 
