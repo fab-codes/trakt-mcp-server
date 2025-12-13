@@ -1,0 +1,22 @@
+services:
+  trakt-mcp-server:
+    container_name: trakt-mcp-server
+    build: 
+      context: .
+    ports:
+      - "38000:8000"
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=development
+    volumes:
+      - .:/app
+      - /app/__pycache__
+    command: python -m main --http
+    develop:
+      watch:
+        - action: sync
+          path: ./
+          target: /app
+        - action: rebuild
+          path: requirements.txt

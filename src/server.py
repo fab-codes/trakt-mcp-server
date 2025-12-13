@@ -124,6 +124,7 @@ class TraktMCPServer:
         formatted_output = format_trending_shows(data)
         return [TextContent(type="text", text=formatted_output)]
 
+
     async def cleanup(self) -> None:
         """Clean up resources on shutdown."""
         logger.info("Cleaning up TraktMCPServer resources")
@@ -131,7 +132,7 @@ class TraktMCPServer:
 
     async def run(self) -> None:
         """Start the MCP server with stdio transport."""
-        logger.info("Starting Trakt MCP Server")
+        logger.info("Starting Trakt MCP Server with stdio transport")
 
         try:
             async with stdio_server() as (read_stream, write_stream):
