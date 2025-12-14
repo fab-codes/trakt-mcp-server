@@ -1,6 +1,6 @@
 # Trakt MCP Server
 
-A production-ready Model Context Protocol (MCP) server that provides AI assistants with seamless access to the Trakt.tv API, enabling intelligent TV show tracking, watchlist management, and personalized viewing recommendations.
+A production-ready Model Context Protocol (MCP) server that provides AI assistants with seamless access to the [Trakt.tv](https://trakt.tv) API, enabling intelligent TV show tracking, watchlist management, and personalized viewing recommendations.
 
 ## Features
 
@@ -311,7 +311,6 @@ httpx.AsyncClient(
 
 This server implements the [Model Context Protocol](https://modelcontextprotocol.io/) and works with any compatible client:
 
-- **Claude Desktop** - AI assistant with MCP support
 - **Custom MCP Clients** - Any client implementing MCP specification
 - **Development Tools** - MCP Inspector, testing frameworks
 
@@ -319,7 +318,7 @@ This server implements the [Model Context Protocol](https://modelcontextprotocol
 
 **1. Start the Server**
 ```bash
-# For local MCP clients (Claude Desktop)
+# For local MCP clients
 python main.py
 
 # For network-accessible deployment
@@ -445,14 +444,6 @@ The httpx client automatically handles:
 - Redirect following
 - Timeout management (30s default)
 
-## API Rate Limiting
-
-Trakt API implements rate limiting:
-- **Public endpoints**: 1000 requests per 5 minutes
-- **Authenticated endpoints**: 1000 requests per 5 minutes per user
-
-The server handles rate limit errors gracefully and returns clear messages to clients.
-
 ## Development
 
 ### Code Organization
@@ -501,10 +492,6 @@ def register_all_tools(mcp: FastMCP) -> None:
     register_my_new_tools(mcp)  # Add this
 ```
 
-## License
-
-[Your License Here]
-
 ## Contributing
 
 Contributions welcome! Please:
@@ -513,9 +500,3 @@ Contributions welcome! Please:
 3. Follow existing code style and patterns
 4. Add tests for new functionality
 5. Submit a pull request
-
-## Support
-
-- **Issues**: [GitHub Issues](your-repo-url/issues)
-- **Documentation**: [Trakt API Docs](https://trakt.docs.apiary.io/)
-- **MCP Specification**: [Model Context Protocol](https://modelcontextprotocol.io/)
