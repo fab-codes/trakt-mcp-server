@@ -35,7 +35,7 @@ async def lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
         logger.info("Server is running")
     finally:
         # Cleanup on server shutdown
-        logger.info("🧹 Cleaning up resources...")
+        logger.info("Cleaning up resources...")
         await api_client.close()
         logger.info("Cleanup complete")
 
@@ -43,7 +43,7 @@ async def lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
 # Create the FastMCP server with lifespan
 mcp = FastMCP(
     name="Trakt.tv MCP Server",
-    version='1.0.0',
+    version='0.0.3',
     lifespan=lifespan
 )
 

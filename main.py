@@ -23,7 +23,7 @@ def main() -> None:
     try:
         if "--http" in sys.argv:
             logger.info(f"Starting Streamable HTTP server on port 8000...")
-            mcp.run(transport="streamable-http")
+            mcp.run(transport="streamable-http", host="0.0.0.0")
         else:
             logger.info("Starting stdio server...")
             mcp.run(transport="stdio")
