@@ -1,9 +1,8 @@
 from typing import Annotated
-from mcp.server.fastmcp import FastMCP, Context
-from mcp.server.session import ServerSession
+from fastmcp import FastMCP
 from pydantic import Field
+from fastmcp.server.context import Context  
 
-from src.server import AppContext
 from src.formatters import format_search_results, format_trending_shows
 from src.utils.logger import get_logger
 
@@ -18,11 +17,11 @@ def register_discovery_tools(mcp: FastMCP) -> None:
     # ================================================================
     @mcp.tool()
     async def search_shows(
+        ctx: Context,
         query: Annotated[str, Field(
             description="Search query (show title or keywords)",
             min_length=1
-        )],
-        ctx: Context[ServerSession, AppContext]
+        )]
     ) -> str:
         """
         Search for TV shows in the Trakt.tv database by title or keywords.
@@ -57,7 +56,7 @@ def register_discovery_tools(mcp: FastMCP) -> None:
     # ================================================================
     @mcp.tool()
     async def get_trending_shows(
-        ctx: Context[ServerSession, AppContext],
+        ctx: Context,
         limit: Annotated[int, Field(
             default=10,
             ge=1,

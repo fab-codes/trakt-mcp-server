@@ -1,12 +1,8 @@
-"""
-src/tools/watchlist.py - Tool per gestione watchlist
-"""
 from typing import Annotated
-from mcp.server.fastmcp import FastMCP, Context
-from mcp.server.session import ServerSession
+from fastmcp import FastMCP
 from pydantic import Field
+from fastmcp.server.context import Context  
 
-from src.server import AppContext
 from src.formatters import format_watchlist
 from src.utils.logger import get_logger
 
@@ -21,11 +17,11 @@ def register_watchlist_tools(mcp: FastMCP) -> None:
     # ================================================================
     @mcp.tool()
     async def add_to_watchlist(
+        ctx: Context,
         show_id: Annotated[str, Field(
             description="Trakt show ID (numeric) obtained from search_shows",
             pattern=r"^[0-9]+$"
-        )],
-        ctx: Context[ServerSession, AppContext]
+        )]
     ) -> str:
         """
         Add a TV show to the user's Trakt.tv watchlist for later viewing.
@@ -66,11 +62,11 @@ def register_watchlist_tools(mcp: FastMCP) -> None:
     # ================================================================
     @mcp.tool()
     async def remove_from_watchlist(
+        ctx: Context,
         show_id: Annotated[str, Field(
             description="Trakt show ID (numeric) to remove",
             pattern=r"^[0-9]+$"
-        )],
-        ctx: Context[ServerSession, AppContext]
+        )]
     ) -> str:
         """
         Remove a TV show from the user's Trakt.tv watchlist.
@@ -100,7 +96,7 @@ def register_watchlist_tools(mcp: FastMCP) -> None:
     # ================================================================
     @mcp.tool()
     async def get_watchlist(
-        ctx: Context[ServerSession, AppContext]
+        ctx: Context
     ) -> str:
         """
         Fetches the user's personal Trakt.tv watchlist of TV shows saved for later.

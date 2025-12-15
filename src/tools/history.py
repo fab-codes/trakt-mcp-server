@@ -1,9 +1,8 @@
-from mcp.server.fastmcp import FastMCP, Context
-from mcp.server.session import ServerSession
+from fastmcp import FastMCP, Context
 
-from src.server import AppContext
 from src.formatters import format_watched_shows
 from src.utils.logger import get_logger
+from fastmcp.server.context import Context  
 
 logger = get_logger(__name__)
 
@@ -16,7 +15,7 @@ def register_history_tools(mcp: FastMCP) -> None:
     # ================================================================
     @mcp.tool()
     async def get_watched_shows(
-        ctx: Context[ServerSession, AppContext]
+        ctx: Context
     ) -> str:
         """
         Retrieves the complete watch history of TV shows from Trakt.tv.

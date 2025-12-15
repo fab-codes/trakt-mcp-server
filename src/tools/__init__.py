@@ -1,4 +1,4 @@
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
 from src.tools.watchlist import register_watchlist_tools
 from src.tools.history import register_history_tools
