@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List
 import httpx
 from src.config import AppConfig
 from src.exceptions import (
@@ -144,3 +144,14 @@ class TraktAPIClient:
         """Close the HTTP client and cleanup resources."""
         logger.info("Closing TraktAPIClient")
         await self.http_client.aclose()
+
+    async def get_show_episodes(self, show_id: str) -> List[dict[str, Any]]:
+        """
+        Get show episodes.
+        """
+        logger.info(f"Get show {show_id} episodes")
+        return await self._make_request(
+            "GET",
+            f"/shows/{show_id}/seasons",
+            params={"extended": "episodes"}
+        )
