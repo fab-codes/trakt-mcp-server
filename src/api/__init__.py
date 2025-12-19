@@ -140,18 +140,43 @@ class TraktAPIClient:
         logger.info(f"Fetching {limit} trending shows")
         return await self._make_request("GET", f"/shows/trending?limit={limit}")
 
-    async def close(self) -> None:
-        """Close the HTTP client and cleanup resources."""
-        logger.info("Closing TraktAPIClient")
-        await self.http_client.aclose()
-
-    async def get_show_episodes(self, show_id: str) -> List[dict[str, Any]]:
+    async def get_show_all_episodes(self, show_id: str) -> List[dict[str, Any]]:
         """
-        Get show episodes.
+        Get all seasons with episodes overview for a show.
         """
-        logger.info(f"Get show {show_id} episodes")
+        logger.info(f"Fetching all seasons overview for show {show_id}")
         return await self._make_request(
             "GET",
             f"/shows/{show_id}/seasons",
             params={"extended": "episodes"}
         )
+
+    async def get_show_season_episodes(self, show_id: str, season: int) -> List[dict[str, Any]]:
+        """
+        Get detailed episodes for a specific season.
+        """
+        logger.info(f"Fetching detailed episodes for show {show_id}, season {season}")
+        return await self._make_request(
+            "GET",
+            f"/shows/{show_id}/seasons/{season}",
+            params={"extended": "min"}
+        )
+
+    async def mark_episode_as_watched(self, episode_id: str) -> dict[str, Any]:
+        """
+        Mark an episode as watched.
+        """
+        logger.info(f"Marking episode {episode_id} as watched")
+
+        payload = {
+            "episodes": [
+                {"ids": {"trakt": int(episode_id)}}
+            ]
+        }
+
+        return await self._make_request("POST", "/sync/history", json=payload)
+
+    async def close(self) -> None:
+        """Close the HTTP client and cleanup resources."""
+        logger.info("Closing TraktAPIClient")
+        await self.http_client.aclose()

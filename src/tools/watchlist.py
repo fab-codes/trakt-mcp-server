@@ -129,3 +129,50 @@ def register_watchlist_tools(mcp: FastMCP) -> None:
         data = await api.get_watchlist()
 
         return format_watchlist(data)
+
+    # ================================================================
+    # MARK AS WATCHED
+    # ================================================================
+    @mcp.tool()
+    async def mark_episode_as_watched(
+        ctx: Context,
+        episode_id: Annotated[str, Field(
+            description="Trakt episode ID (numeric) obtained from get_show_episodes",
+            pattern=r"^[0-9]+$"
+        )]
+    ) -> str:
+        """
+        Mark a specific TV episode as watched in the user's Trakt.tv history.
+
+        **What it does:**
+        - Records the episode as watched with current timestamp
+        - Updates user's watch progress for the show
+        - Syncs viewing history across all Trakt-connected apps and devices
+        - May automatically remove show from watchlist if all episodes are watched
+
+        **When to use:**
+        - User says 'Mark [show] episode as watched'
+        - User confirms they finished watching an episode
+        - User wants to manually update their viewing progress
+        - User asks to 'record' or 'log' episode completion
+
+        **Important:**
+        - You must get the episode_id first using get_show_episodes
+        - Use the Trakt numeric episode ID (not season/episode number)
+        - Marking episodes updates show progress statistics
+
+        **Example workflow:**
+        1. User: 'Mark Breaking Bad S01E01 as watched'
+        2. You: Call get_show_episodes with show_id and season=1
+        3. You: Extract the episode ID for episode 1 from results
+        4. You: Call mark_episode_as_watched with that episode_id
+
+        Returns confirmation message with number of episodes marked as watched.
+        """
+        logger.info(f"Marking episode {episode_id} as watched")
+
+        api = ctx.request_context.lifespan_context.api_client
+        data = await api.mark_episode_as_watched(episode_id)
+        
+        added = data.get("added", {}).get("episodes", 0)
+        return f"✓ Successfully marked {added} episode(s) as watched."

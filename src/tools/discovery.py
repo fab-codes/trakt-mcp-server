@@ -3,7 +3,7 @@ from fastmcp import FastMCP
 from pydantic import Field
 from fastmcp.server.context import Context  
 
-from src.formatters import format_search_results, format_trending_shows, format_show_episodes
+from src.formatters import format_search_results, format_trending_shows, format_show_all_episodes, format_show_season_episodes
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -52,10 +52,10 @@ def register_discovery_tools(mcp: FastMCP) -> None:
         return format_search_results(query, data)
 
     # ================================================================
-    # GET SHOW EPISODES
+    # GET ALL SHOW EPISODES (ALL SEASONS)
     # ================================================================
     @mcp.tool()
-    async def get_show_episodes(
+    async def get_show_all_episodes(
         ctx: Context,
         show_id: Annotated[str, Field(
             description="Trakt show ID (numeric) obtained from search_shows",
@@ -63,41 +63,92 @@ def register_discovery_tools(mcp: FastMCP) -> None:
         )]
     ) -> str:
         """
-        Retrieve all episodes for a specific TV show organized by season.
+        Retrieve complete episodes overview for all seasons of a TV show.
 
         **What it does:**
-        - Fetches complete season and episode breakdown for a show
-        - Returns episode numbers, titles, air dates, and IDs
-        - Provides detailed metadata for each episode in the series
-        - Uses Trakt's extended episodes parameter for comprehensive data
+        - Fetches all seasons with their episodes in a comprehensive overview
+        - Returns season numbers, episode counts, air dates, and Trakt IDs
+        - Shows complete show structure with all seasons and episodes
+        - Provides compact view optimized for browsing entire show catalog
 
         **When to use:**
-        - User asks 'What are the episodes of [show name]?'
-        - Need to see complete episode list for a series
-        - User wants season/episode information
-        - Looking up specific episode details or air dates
-        - Building watch progress tracking
+        - User asks 'What are all the episodes of [show name]?'
+        - User wants to see complete show structure
+        - User requests 'Show me all Breaking Bad episodes'
+        - Looking up complete episode catalog
+        - Need overview before diving into specific season
 
         **Example queries:**
         - 'Show me all episodes of Breaking Bad'
-        - 'What episodes are in The Office season 3?'
-        - 'Get episode list for Game of Thrones'
-        - 'How many episodes does Stranger Things have?'
+        - 'Get complete episode list for Game of Thrones'
+        - 'What episodes are available for The Office?'
+        - 'List all Stranger Things episodes'
 
         **Input:**
-        - Requires a valid Trakt show ID (obtained from search_shows)
-        - Accepts both numeric IDs (e.g., '1390') or slugs (e.g., 'game-of-thrones')
+        - show_id: Trakt show ID (obtained from search_shows)
 
         **Output:**
-        Returns structured data with seasons, episode numbers, titles, and metadata.
+        Returns formatted overview with all seasons, episode numbers, titles, air dates, and IDs.
+        Includes episode IDs needed for mark_episode_as_watched tool.
         """
-        logger.info(f"Fetching episodes for show ID: {show_id}")
+        logger.info(f"Fetching all episodes overview for show ID: {show_id}")
 
         api = ctx.request_context.lifespan_context.api_client
-        data = await api.get_show_episodes(show_id)
+        data = await api.get_show_all_episodes(show_id)
 
-        return format_show_episodes(data)
+        return format_show_all_episodes(data)
 
+    # ================================================================
+    # GET SINGLE SEASON EPISODES
+    # ================================================================
+    @mcp.tool()
+    async def get_show_season_episodes(
+        ctx: Context,
+        show_id: Annotated[str, Field(
+            description="Trakt show ID (numeric) obtained from search_shows",
+            pattern=r"^[0-9]+$"
+        )],
+        season: Annotated[int, Field(
+            ge=0,
+            description="Season number (0=specials, 1+=regular seasons)"
+        )]
+    ) -> str:
+        """
+        Retrieve detailed episodes for a specific season of a TV show.
+
+        **What it does:**
+        - Fetches detailed episode information for a single season
+        - Returns comprehensive episode metadata including ratings
+        - Shows detailed view with full episode descriptions
+        - Optimized for exploring specific season content
+
+        **When to use:**
+        - User asks 'What episodes are in The Office season 3?'
+        - User wants detailed information about a specific season
+        - User requests 'Show me Breaking Bad S05 episodes'
+        - Looking up specific season details before watching
+        - Need episode information for a particular season
+
+        **Example queries:**
+        - 'What episodes are in The Office season 3?' → season=3
+        - 'Show me Breaking Bad season 5 episodes' → season=5
+        - 'How many episodes in Stranger Things S01?' → season=1
+        - 'Get Game of Thrones season 8 episode list' → season=8
+
+        **Input:**
+        - show_id: Trakt show ID (obtained from search_shows)
+        - season: Season number (0=specials, 1+=regular seasons)
+
+        **Output:**
+        Returns detailed episode information with titles, air dates, ratings, and IDs.
+        Includes episode IDs needed for mark_episode_as_watched tool.
+        """
+        logger.info(f"Fetching detailed episodes for show ID: {show_id}, season {season}")
+
+        api = ctx.request_context.lifespan_context.api_client
+        data = await api.get_show_season_episodes(show_id, season)
+
+        return format_show_season_episodes(data, season)
 
     # ================================================================
     # GET TRENDING SHOWS
