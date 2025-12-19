@@ -11,16 +11,50 @@ collection:
     meta:
       id: fld_1a3e5a494db24c158329645fdcf437ea
       created: 1766106484451
-      modified: 1766106577141
+      modified: 1766136694813
       sortKey: -1766106482002
       description: ""
     children:
+      - url: "{{base_url}}/mcp"
+        name: List tools
+        meta:
+          id: req_fd8e21f678384a8890a9fce44529f99f
+          created: 1766106484458
+          modified: 1766137293728
+          isPrivate: false
+          description: ""
+          sortKey: -1766106481894
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/list",
+                "params": {}
+              }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Accept
+            value: "{{accepted_types}}"
+          - name: mcp-session-id
+            value: "{{_['mcp-session-id']}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
       - url: "{{ _.base_url }}/mcp"
         name: Inizialize
         meta:
           id: req_f2f3ffde84be44039e74eaee948fd84c
           created: 1766106484467
-          modified: 1766106545716
+          modified: 1766136657722
           isPrivate: false
           description: ""
           sortKey: -1766106481994
@@ -50,6 +84,20 @@ collection:
             value: application/json
           - name: Accept
             value: "{{accepted_types}}"
+        scripts:
+          afterResponse: >
+            const mcpSessionIdHeader = insomnia.response.headers.find(header =>
+            header.key === 'mcp-session-id');
+
+
+            if (!mcpSessionIdHeader.value) {
+              throw new Error('mcp-session-id not found');
+            }
+
+
+
+            insomnia.environment.set('mcp-session-id',
+            mcpSessionIdHeader.value);
         settings:
           renderRequestBody: true
           encodeUrl: true
@@ -66,250 +114,283 @@ collection:
           sortKey: -1766106482001
           description: ""
         children:
-          - url: "{{base_url}}/mcp"
-            name: List tools
+          - name: Discovery
             meta:
-              id: req_fd8e21f678384a8890a9fce44529f99f
-              created: 1766106484458
-              modified: 1766106484458
-              isPrivate: false
+              id: fld_20db760ac3c14cdc895735d3430b6747
+              created: 1766137309984
+              modified: 1766137309984
+              sortKey: -1766137309984
               description: ""
-              sortKey: -1766106482000
-            method: POST
-            body:
-              mimeType: application/json
-              text: |-
-                {
-                    "jsonrpc": "2.0",
-                    "id": 2,
-                    "method": "tools/list",
-                    "params": {}
-                  }
-            headers:
-              - name: Content-Type
-                value: application/json
-              - name: Accept
-                value: "{{accepted_types}}"
-              - name: mcp-session-id
-                value: "{{_['mcp-session-id']}}"
-            settings:
-              renderRequestBody: true
-              encodeUrl: true
-              followRedirects: global
-              cookies:
-                send: true
-                store: true
-              rebuildPath: true
-          - url: "{{base_url}}/mcp"
-            name: Search show
-            meta:
-              id: req_82a1faa9253e4f5a91faf2ad75d4c38b
-              created: 1766106484460
-              modified: 1766106484460
-              isPrivate: false
-              description: ""
-              sortKey: -1766106481999
-            method: POST
-            body:
-              mimeType: application/json
-              text: |-
-                {
-                    "jsonrpc": "2.0",
-                    "id": 3,
-                    "method": "tools/call",
-                    "params": {
-                      "name": "search_shows",
-                      "arguments": {
-                        "query": "Breaking Bad"
+            children:
+              - url: "{{base_url}}/mcp"
+                name: Search show
+                meta:
+                  id: req_82a1faa9253e4f5a91faf2ad75d4c38b
+                  created: 1766106484460
+                  modified: 1766137314039
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1766137314022
+                method: POST
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                        "jsonrpc": "2.0",
+                        "id": 3,
+                        "method": "tools/call",
+                        "params": {
+                          "name": "search_shows",
+                          "arguments": {
+                            "query": "Breaking Bad"
+                          }
+                        }
                       }
-                    }
-                  }
-            headers:
-              - name: Content-Type
-                value: application/json
-              - name: Accept
-                value: "{{accepted_types}}"
-              - name: mcp-session-id
-                value: "{{_['mcp-session-id']}}"
-            settings:
-              renderRequestBody: true
-              encodeUrl: true
-              followRedirects: global
-              cookies:
-                send: true
-                store: true
-              rebuildPath: true
-          - url: "{{base_url}}/mcp"
-            name: Get trending shows
-            meta:
-              id: req_e53863b0424e4a34a9c113adf531912b
-              created: 1766106484461
-              modified: 1766106484461
-              isPrivate: false
-              description: ""
-              sortKey: -1766106481998
-            method: POST
-            body:
-              mimeType: application/json
-              text: |-
-                {
-                    "jsonrpc": "2.0",
-                    "id": 4,
-                    "method": "tools/call",
-                    "params": {
-                      "name": "get_trending_shows",
-                      "arguments": {
-                        "limit": 5
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                  - name: Accept
+                    value: "{{accepted_types}}"
+                  - name: mcp-session-id
+                    value: "{{_['mcp-session-id']}}"
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{base_url}}/mcp"
+                name: Get trending shows
+                meta:
+                  id: req_e53863b0424e4a34a9c113adf531912b
+                  created: 1766106484461
+                  modified: 1766137342896
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1766137314222
+                method: POST
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                        "jsonrpc": "2.0",
+                        "id": 4,
+                        "method": "tools/call",
+                        "params": {
+                          "name": "get_trending_shows",
+                          "arguments": {
+                            "limit": 5
+                          }
+                        }
                       }
-                    }
-                  }
-            headers:
-              - name: Content-Type
-                value: application/json
-              - name: Accept
-                value: "{{accepted_types}}"
-              - name: mcp-session-id
-                value: "{{_['mcp-session-id']}}"
-            settings:
-              renderRequestBody: true
-              encodeUrl: true
-              followRedirects: global
-              cookies:
-                send: true
-                store: true
-              rebuildPath: true
-          - url: "{{base_url}}/mcp"
-            name: Get watchlist
-            meta:
-              id: req_18e20b84e3714a99a1471f2a41f782bd
-              created: 1766106484463
-              modified: 1766106484463
-              isPrivate: false
-              description: ""
-              sortKey: -1766106481997
-            method: POST
-            body:
-              mimeType: application/json
-              text: |-
-                {
-                    "jsonrpc": "2.0",
-                    "id": 5,
-                    "method": "tools/call",
-                    "params": {
-                      "name": "get_watchlist",
-                      "arguments": {}
-                    }
-                  }
-            headers:
-              - name: Content-Type
-                value: application/json
-              - name: Accept
-                value: "{{accepted_types}}"
-              - name: mcp-session-id
-                value: "{{_['mcp-session-id']}}"
-            settings:
-              renderRequestBody: true
-              encodeUrl: true
-              followRedirects: global
-              cookies:
-                send: true
-                store: true
-              rebuildPath: true
-          - url: "{{base_url}}/mcp"
-            name: Get watched shows
-            meta:
-              id: req_d15623eaf72e4f629da29880d971d4dd
-              created: 1766106484464
-              modified: 1766106484464
-              isPrivate: false
-              description: ""
-              sortKey: -1766106481996
-            method: POST
-            body:
-              mimeType: application/json
-              text: |-
-                {
-                    "jsonrpc": "2.0",
-                    "id": 6,
-                    "method": "tools/call",
-                    "params": {
-                      "name": "get_watched_shows",
-                      "arguments": {}
-                    }
-                  }
-            headers:
-              - name: Content-Type
-                value: application/json
-              - name: Accept
-                value: "{{accepted_types}}"
-              - name: mcp-session-id
-                value: "{{_['mcp-session-id']}}"
-            settings:
-              renderRequestBody: true
-              encodeUrl: true
-              followRedirects: global
-              cookies:
-                send: true
-                store: true
-              rebuildPath: true
-          - url: "{{base_url}}/mcp"
-            name: Add to watchlist
-            meta:
-              id: req_cea4cc95fa0b4062aff8efd4679ecd40
-              created: 1766106484465
-              modified: 1766106484465
-              isPrivate: false
-              description: ""
-              sortKey: -1766106481995
-            method: POST
-            body:
-              mimeType: application/json
-              text: |-
-                {
-                    "jsonrpc": "2.0",
-                    "id": 7,
-                    "method": "tools/call",
-                    "params": {
-                      "name": "add_to_watchlist",
-                      "arguments": {
-                        "show_id": "1388"
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                  - name: Accept
+                    value: "{{accepted_types}}"
+                  - name: mcp-session-id
+                    value: "{{_['mcp-session-id']}}"
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{base_url}}/mcp"
+                name: Get show episodes
+                meta:
+                  id: req_c1c95d591033420b8224d9e5c2dc98e2
+                  created: 1766108301743
+                  modified: 1766137329202
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1766137314122
+                method: POST
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                        "jsonrpc": "2.0",
+                        "id": 7,
+                        "method": "tools/call",
+                        "params": {
+                          "name": "get_show_episodes",
+                          "arguments": {
+                            "show_id": "104439"
+                          }
+                        }
                       }
-                    }
-                  }
-            headers:
-              - name: Content-Type
-                value: application/json
-              - name: Accept
-                value: "{{accepted_types}}"
-              - name: mcp-session-id
-                value: "{{_['mcp-session-id']}}"
-            settings:
-              renderRequestBody: true
-              encodeUrl: true
-              followRedirects: global
-              cookies:
-                send: true
-                store: true
-              rebuildPath: true
-    environment:
-      mcp-session-id: 7b6158f934b44fdeabbcf91b3d691348
-      accepted_types: application/json, text/event-stream
-      base_url: http://localhost:8000
-    environmentPropertyOrder:
-      "&":
-        - mcp-session-id
-        - accepted_types
-        - base_url
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                  - name: Accept
+                    value: "{{accepted_types}}"
+                  - name: mcp-session-id
+                    value: "{{_['mcp-session-id']}}"
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+          - name: History
+            meta:
+              id: fld_a745224cf60b4d82919c693601a2199e
+              created: 1766137357460
+              modified: 1766137357460
+              sortKey: -1766137357461
+              description: ""
+            children:
+              - url: "{{base_url}}/mcp"
+                name: Get watched shows
+                meta:
+                  id: req_d15623eaf72e4f629da29880d971d4dd
+                  created: 1766106484464
+                  modified: 1766137361547
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1766137361526
+                method: POST
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                        "jsonrpc": "2.0",
+                        "id": 6,
+                        "method": "tools/call",
+                        "params": {
+                          "name": "get_watched_shows",
+                          "arguments": {}
+                        }
+                      }
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                  - name: Accept
+                    value: "{{accepted_types}}"
+                  - name: mcp-session-id
+                    value: "{{_['mcp-session-id']}}"
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+          - name: Watchlist
+            meta:
+              id: fld_24f1fe0c09d146c597c6b4c243179cd0
+              created: 1766137375076
+              modified: 1766137375076
+              sortKey: -1766137375076
+              description: ""
+            children:
+              - url: "{{base_url}}/mcp"
+                name: Get watchlist
+                meta:
+                  id: req_18e20b84e3714a99a1471f2a41f782bd
+                  created: 1766106484463
+                  modified: 1766137384804
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1766137379433
+                method: POST
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                        "jsonrpc": "2.0",
+                        "id": 5,
+                        "method": "tools/call",
+                        "params": {
+                          "name": "get_watchlist",
+                          "arguments": {}
+                        }
+                      }
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                  - name: Accept
+                    value: "{{accepted_types}}"
+                  - name: mcp-session-id
+                    value: "{{_['mcp-session-id']}}"
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{base_url}}/mcp"
+                name: Add to watchlist
+                meta:
+                  id: req_cea4cc95fa0b4062aff8efd4679ecd40
+                  created: 1766106484465
+                  modified: 1766137379555
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1766137379533
+                method: POST
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                        "jsonrpc": "2.0",
+                        "id": 7,
+                        "method": "tools/call",
+                        "params": {
+                          "name": "add_to_watchlist",
+                          "arguments": {
+                            "show_id": "1388"
+                          }
+                        }
+                      }
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                  - name: Accept
+                    value: "{{accepted_types}}"
+                  - name: mcp-session-id
+                    value: "{{_['mcp-session-id']}}"
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:
     id: jar_75831af1ccba7d56b49bc35b80d0b8f7e1c1394d
     created: 1766106484473
-    modified: 1766106484473
+    modified: 1766136694806
 environments:
   name: Base Environment
   meta:
     id: env_75831af1ccba7d56b49bc35b80d0b8f7e1c1394d
     created: 1766106484469
-    modified: 1766106484469
+    modified: 1766136694812
     isPrivate: false
+  subEnvironments:
+    - name: Trakt.tv MCP Server
+      meta:
+        id: env_754f667864b5452cb94431066a3623eb
+        created: 1766136494061
+        modified: 1766136694810
+        isPrivate: true
+        sortKey: 1766136494061
+      data:
+        mcp-session-id: ded7072975dd4ab68db2f694f6a25180
+        accepted_types: application/json, text/event-stream
+        base_url: http://localhost:8000
+      color: "#ae00ff"
