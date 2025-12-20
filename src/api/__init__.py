@@ -165,6 +165,19 @@ class TraktAPIClient:
         )
         return result if isinstance(result, list) else []
 
+    async def get_show_progress(self, show_id: str) -> dict[str, Any]:
+        """
+        Retrieve the user's progress for a specific show from Trakt.
+        
+        Args:
+            show_id: The Trakt show ID (numeric or slug)
+        """
+        logger.info(f"Fetching progress for show {show_id}")
+        result = await self._make_request(
+            "GET", f"/shows/{show_id}/progress/watched"
+        )
+        return result if isinstance(result, dict) else {}
+
     # ========================================================================
     # WATCHLIST ENDPOINTS
     # ========================================================================

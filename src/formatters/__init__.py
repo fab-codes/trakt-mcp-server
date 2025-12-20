@@ -29,6 +29,54 @@ def format_watched_shows(shows: list[dict[str, Any]]) -> str:
 
     return "\n".join(formatted)
 
+def format_show_progress(progress: dict[str, Any]) -> str:
+    """
+    Format show progress for display.
+    """
+    if not progress:
+        return "📺 No progress information found for this show."
+    
+    # Get basic progress info
+    aired = progress.get("aired", 0)
+    completed = progress.get("completed", 0)
+    
+    # Get last watched episode
+    last_episode = progress.get("last_episode")
+    
+    if not last_episode:
+        return "📺 You haven't started watching this show yet."
+    
+    # Extract episode details
+    season_num = last_episode.get("season", "?")
+    episode_num = last_episode.get("number", "?")
+    title = last_episode.get("title", "Unknown")
+    overview = last_episode.get("overview", "No description available")
+    episode_ids = last_episode.get("ids", {})
+    trakt_id = episode_ids.get("trakt", "N/A")
+    
+    # Build formatted output
+    formatted = [
+        f"📺 **Last Episode Watched**\n",
+        f"**Season {season_num}, Episode {episode_num}: {title}**",
+        f"{overview}",
+        f"ID: {trakt_id}\n",
+        f"Progress: {completed}/{aired} episodes completed"
+    ]
+    
+    # Add next episode if available
+    next_episode = progress.get("next_episode")
+    if next_episode:
+        next_season = next_episode.get("season", "?")
+        next_num = next_episode.get("number", "?")
+        next_title = next_episode.get("title", "Unknown")
+        next_ids = next_episode.get("ids", {})
+        next_trakt_id = next_ids.get("trakt", "N/A")
+        formatted.append(f"\n▶️ **Next**: S{next_season}E{next_num} - {next_title}")
+        formatted.append(f"ID: {next_trakt_id}")
+    else:
+        formatted.append("\n✅ **Show completed!**")
+    
+    return "\n".join(formatted)
 
 def format_watchlist(watchlist: list[dict[str, Any]]) -> str:
     """

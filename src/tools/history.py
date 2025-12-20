@@ -1,6 +1,8 @@
+from typing import Annotated
 from fastmcp import Context, FastMCP
+from pydantic import Field
 
-from src.formatters import format_watched_shows
+from src.formatters import format_show_progress, format_watched_shows
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -43,3 +45,46 @@ def register_history_tools(mcp: FastMCP) -> None:
         data = await api.get_watched_shows()
 
         return format_watched_shows(data)
+
+    # ================================================================
+    # GET SHOW PROGRESS
+    # ================================================================
+    @mcp.tool()
+    async def get_show_progress(
+        ctx: Context,
+        show_id: Annotated[str, Field(
+            description="Trakt show ID (numeric) obtained from search_shows",
+            pattern=r"^[0-9]+$"
+        )]
+    ) -> str:
+        """
+        Retrieves the watch progress for a specific TV show from Trakt.tv.
+
+        **What it does:**
+        - Returns detailed progress information for a single show
+        - Shows which episodes have been watched and which are pending
+        - Includes information about the next episode to watch
+        - Provides season-by-season progress breakdown
+
+        **When to use:**
+        - User asks about their progress on a specific show (e.g., 'Where am I in The Bear?')
+        - User wants to know which episode to watch next
+        - Checking completion status of a particular series
+        - User asks 'What episode am I on?' for a specific show
+
+        **Example queries:**
+        - 'What episode am I on in Demon Slayer?'
+        - 'How far am I into The Bear?'
+        - 'What's the next episode I need to watch?'
+        - 'Am I caught up with Pluribus?'
+
+        **Note:** Requires OAuth authentication with user's Trakt account.
+
+        Returns dictionary with show progress details and episode information.
+        """
+        logger.info(f"Fetching progress for show {show_id}")
+
+        api = ctx.request_context.lifespan_context.api_client
+        data = await api.get_show_progress(show_id)
+
+        return format_show_progress(data)
