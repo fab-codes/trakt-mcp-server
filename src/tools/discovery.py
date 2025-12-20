@@ -1,9 +1,14 @@
 from typing import Annotated
-from fastmcp import FastMCP
-from pydantic import Field
-from fastmcp.server.context import Context  
 
-from src.formatters import format_search_results, format_trending_shows, format_show_all_episodes, format_show_season_episodes
+from fastmcp import Context, FastMCP
+from pydantic import Field
+
+from src.formatters import (
+    format_search_results,
+    format_show_all_episodes,
+    format_show_season_episodes,
+    format_trending_shows,
+)
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)

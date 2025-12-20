@@ -1,7 +1,7 @@
 from typing import Annotated
-from fastmcp import FastMCP
+
+from fastmcp import Context, FastMCP
 from pydantic import Field
-from fastmcp.server.context import Context  
 
 from src.formatters import format_watchlist
 from src.utils.logger import get_logger

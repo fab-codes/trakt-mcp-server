@@ -1,4 +1,26 @@
-python-dotenv
-httpx
+# ============================================================================
+# Trakt MCP Server - Production Dependencies
+# ============================================================================
+#
+# NOTE: This file is maintained for backward compatibility and Docker builds.
+# For modern Python projects, use pyproject.toml as the primary dependency source.
+#
+# To install: pip install -r requirements.txt
+# To install with dev tools: pip install -e ".[dev]"
+# ============================================================================
 
-fastmcp
+# Core MCP Framework
+fastmcp>=2.14.0
+
+# HTTP Client with HTTP/2 Support
+httpx[http2]>=0.28.0
+
+# Environment Variables
+python-dotenv>=1.2.0
+
+# Configuration & Validation (Pydantic v2)
+pydantic>=2.10.0
+pydantic-settings>=2.6.0
+
+# Retry Logic & Resilience
+tenacity>=9.0.0
