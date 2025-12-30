@@ -66,6 +66,9 @@ Documentation = "https://github.com/fab-codes/trakt-mcp-server#readme"
 [project.scripts]
 trakt-mcp = "main:main"
 
+[project.entry-points."fastmcp"]
+trakt = "src.server:mcp"
+
 [tool.setuptools]
 packages = ["src", "src.api", "src.config", "src.exceptions", "src.formatters", "src.tools", "src.utils"]
 

@@ -50,3 +50,5 @@ mcp = FastMCP(
 # Import and register all tools
 from src.tools import register_all_tools
 register_all_tools(mcp)
+
+__all__ = ["mcp"]
